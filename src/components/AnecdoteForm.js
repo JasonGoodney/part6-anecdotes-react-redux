@@ -6,7 +6,6 @@ import {
   removeNotification
 } from '../reducers/notificationReducer'
 import Filter from './Filter'
-import anecdoteService from '../services/anecdotes'
 
 const AnecdoteForm = props => {
   const addAnecdote = async event => {

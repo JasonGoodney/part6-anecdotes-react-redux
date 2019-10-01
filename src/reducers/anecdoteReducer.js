@@ -16,14 +16,14 @@ const anecdoteReducer = (state = [], action) => {
     case 'INIT_ANECDOTES':
       return action.data
     case 'INCREMENT_VOTE':
-      const id = action.data.id
-      const anecdoteToChange = state.find(a => a.id === id)
-      const changedAnecdote = {
-        ...anecdoteToChange,
-        votes: anecdoteToChange.votes + 1
-      }
+      const updatedAnecdote = action.data
+      // const anecdoteToChange = state.find(a => a.id === id)
+      // const changedAnecdote = {
+      //   ...anecdoteToChange,
+      //   votes: anecdoteToChange.votes + 1
+      // }
       return state
-        .map(a => (a.id !== id ? a : changedAnecdote))
+        .map(a => (a.id !== updatedAnecdote.id ? a : updatedAnecdote))
         .sort((a, b) => b.votes - a.votes)
     default:
       return state
@@ -40,10 +40,18 @@ export const createAnecdote = content => {
   }
 }
 
-export const incrementVotesOf = id => {
-  return {
-    type: 'INCREMENT_VOTE',
-    data: { id }
+export const incrementVotesOf = anecdote => {
+  const changedAnecdote = {
+    ...anecdote,
+    votes: anecdote.votes + 1
+  }
+  return async dispatch => {
+    const updatedAnecdote = await anecdotesService.update(changedAnecdote)
+    console.log('dispatched', updatedAnecdote)
+    dispatch({
+      type: 'INCREMENT_VOTE',
+      data: changedAnecdote
+    })
   }
 }
 
@@ -52,7 +60,7 @@ export const initializedAnecdotes = () => {
     const anecdotes = await anecdotesService.getAll()
     dispatch({
       type: 'INIT_ANECDOTES',
-      data: anecdotes
+      data: anecdotes.sort((a, b) => b.votes - a.votes)
     })
   }
 }
