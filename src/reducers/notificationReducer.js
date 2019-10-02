@@ -1,28 +1,39 @@
 const initialState = {}
 
 const notificationReducer = (state = initialState, action) => {
+  console.log('action', action)
   switch (action.type) {
-    case 'CREATE_NOTIFICATION':
+    case 'SET_NOTIFICATION':
       return action.data
-    case 'REMOVE_NOTIFICATION':
+    case 'CLEAR_NOTIFICATION':
       return action.data
     default:
       return state
   }
 }
 
-export const createNotification = message => {
+export const setNotification = (text, durationInSeconds) => {
+  const durationInMilliseconds = durationInSeconds * 1000
+  return dispatch => {
+    dispatch(createNotification(text))
+    setTimeout(() => {
+      dispatch(clearNotification())
+    }, durationInMilliseconds)
+  }
+}
+
+const createNotification = text => {
   return {
-    type: 'CREATE_NOTIFICATION',
+    type: 'SET_NOTIFICATION',
     data: {
-      message
+      text
     }
   }
 }
 
-export const removeNotification = () => {
+const clearNotification = () => {
   return {
-    type: 'REMOVE_NOTIFICATION',
+    type: 'CLEAR_NOTIFICATION',
     data: initialState
   }
 }

@@ -9,8 +9,8 @@ const Notification = props => {
   }
   return (
     <div>
-      {props.notification.message ? (
-        <div style={style}>{props.notification.message}</div>
+      {props.notification.text ? (
+        <div style={style}>{props.notification.text}</div>
       ) : (
         <></>
       )}
